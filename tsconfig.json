@@ -21,6 +21,24 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "caratchainV2/caratchainv2/types"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "caratchainV2/caratchainv2/types", "scripts/**/*"],
   "exclude": ["node_modules"]
 }
+
+
+// {
+//   "compilerOptions": {
+//     "target": "es2020",
+//     "module": "es2020",
+//     "moduleResolution": "bundler",
+//     "strict": true,
+//     "esModuleInterop": true,
+//     "skipLibCheck": true,
+//     "forceConsistentCasingInFileNames": true,
+//     "outDir": "./scripts",
+//     "rootDir": "./scripts"
+//   },
+//   "include": ["scripts/**/*"],
+//   "exclude": ["node_modules"]
+// }
+
