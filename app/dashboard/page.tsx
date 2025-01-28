@@ -51,7 +51,7 @@ export default function Dashboard() {
 
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-4">Welcome, {session?.user?.email}</h1>
+      <h1 className="text-2xl font-bold mb-4">Welcome, {session?.user?.name}</h1>
       <p>Role: {session?.user?.role}</p>
       {kycStatus && <p>KYC Status: {kycStatus}</p>}
       {session?.user?.role !== "admin" && kycStatus !== "approved" && kycStatus !== "submitted" && (

@@ -21,7 +21,7 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "caratchainV2/caratchainv2/types", "scripts/**/*"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "caratchainV2/caratchainv2/types", "scripts/**/*", "app/dashboard/admin/token"],
   "exclude": ["node_modules"]
 }
 

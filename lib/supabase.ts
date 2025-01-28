@@ -36,6 +36,8 @@ export type Diamond = {
   cut?: string
   certificate_number?: string
   is_tokenized: boolean
+  price_per_token: number
+  total_supply: number
   created_at: string
   updated_at: string
 }

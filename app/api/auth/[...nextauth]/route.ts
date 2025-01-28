@@ -15,13 +15,14 @@ const handler = NextAuth({
           return null
         }
 
-        const { data, error } = await supabase.auth.signInWithPassword({
+        // First, check if the user exists in the auth.users table
+        const { data: authUser, error: authError } = await supabase.auth.signInWithPassword({
           email: credentials.email,
           password: credentials.password,
         })
 
-        if (error || !data.user) {
-          console.error("Supabase auth error:", error)
+        if (authError || !authUser.user) {
+          console.error("Supabase auth error:", authError)
           return null
         }
 
@@ -29,7 +30,7 @@ const handler = NextAuth({
         const { data: userData, error: userError } = await supabase
           .from("users")
           .select("*")
-          .eq("id", data.user.id)
+          .eq("id", authUser.user.id)
           .single()
 
         if (userError) {
@@ -38,11 +39,11 @@ const handler = NextAuth({
         }
 
         return {
-          id: data.user.id,
-          email: data.user.email,
+          id: authUser.user.id,
+          email: authUser.user.email,
           role: userData.role,
           name: userData.full_name,
-          supabaseUserId: data.user.id, // Add this line
+          supabaseUserId: authUser.user.id,
         }
       },
     }),
@@ -51,16 +52,14 @@ const handler = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role
-        token.name = user.name
-        token.supabaseUserId = user.supabaseUserId // Add this line
+        token.supabaseUserId = user.supabaseUserId
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
         session.user.role = token.role as string
-        session.user.name = token.name as string
-        session.user.supabaseUserId = token.supabaseUserId as string // Add this line
+        session.user.supabaseUserId = token.supabaseUserId as string
       }
       return session
     },
