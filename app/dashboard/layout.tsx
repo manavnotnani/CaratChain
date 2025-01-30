@@ -127,12 +127,20 @@ export default async function DashboardLayout({
               </>
             )}
             {userRole === "investor" && (
-              <Link
-                href="/dashboard/buy-tokens"
-                className="block py-2 px-4 text-gray-700 hover:bg-gray-200"
-              >
-                Buy Tokens
-              </Link>
+              <>
+                <Link
+                  href="/dashboard/buy-tokens"
+                  className="block py-2 px-4 text-gray-700 hover:bg-gray-200"
+                >
+                  Buy Tokens
+                </Link>
+                <Link
+                  href="/dashboard/subscribe-diamonds"
+                  className="block py-2 px-4 text-gray-700 hover:bg-gray-200"
+                >
+                  Subscribe Diamonds
+                </Link>
+              </>
             )}
             {(!kycKybStatus ||
               (kycKybStatus?.status !== "approved" &&

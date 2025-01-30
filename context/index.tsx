@@ -1,13 +1,12 @@
 "use client"
 
-import { wagmiAdapter, config, projectId } from "@/config"
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
+import { config, projectId, wagmiAdapter } from "@/config"
 import { AppKitOptions, createAppKit } from "@reown/appkit/react"
-import { mainnet, polygon } from "@reown/appkit/networks"
-import { holesky } from "wagmi/chains"
-import React, { type ReactNode } from "react"
-import { WagmiProvider } from "wagmi"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { SessionProvider } from "next-auth/react"
+import { type ReactNode } from "react"
+import { WagmiProvider } from "wagmi"
+import { holesky } from "wagmi/chains"
 
 const queryClient = new QueryClient()
 
