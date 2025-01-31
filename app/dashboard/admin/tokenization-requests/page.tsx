@@ -17,7 +17,9 @@ import {
   useSendTransaction,
   useWaitForTransactionReceipt,
 } from "wagmi";
+import Web3 from "web3";
 
+const web3 = new Web3(process.env.NEXT_PUBLIC_RPC_URL);
 type TokenizationRequest = {
   id: string;
   diamond_id: string;
@@ -86,6 +88,41 @@ export default function TokenizationRequests() {
       setRequests(data);
     }
   };
+
+  function extractEventData(eventValue: any, event: any) {
+    const data: any = {};
+    const inputParams = eventValue.inputs;
+
+    let indexedParams: any= [];
+    let nonIndexedParams: any = [];
+
+    // Separate indexed and non-indexed params
+    inputParams.forEach((param: any) => {
+        if (param.indexed) {
+            indexedParams.push(param);
+        } else {
+            nonIndexedParams.push(param);
+        }
+    });
+
+    // Decode indexed parameters from topics
+    indexedParams.forEach((param: any, index: any) => {
+        data[param.name] = web3.eth.abi.decodeParameter(param.type, event.topics[index + 1]);
+    });
+
+    // Decode non-indexed parameters using `decodeParameters`
+    if (nonIndexedParams.length > 0) {
+        const nonIndexedTypes = nonIndexedParams.map((p: any) => p.type);
+        const decodedValues = web3.eth.abi.decodeParameters(nonIndexedTypes, event.data);
+        
+        nonIndexedParams.forEach((param: any, index: any) => {
+            data[param.name] = decodedValues[index];
+        });
+    }
+
+    return data;
+}
+
 
   const fetchAgents = async () => {
     const { data, error } = await supabase
@@ -170,9 +207,34 @@ export default function TokenizationRequests() {
           const provider = new ethers.JsonRpcProvider(
             process.env.NEXT_PUBLIC_RPC_URL
           );
+          const contractWithProvider = new ethers.Contract(
+            contractAddress,
+            tokenizationABI,
+            provider
+          );
+
           const result = await provider.waitForTransaction(hash);
 
-          console.log('result', result)
+          console.log(
+            "Transaction result:",
+            result?.blockNumber,
+            Number(result?.blockNumber) - 1
+          );
+
+          const eventDetails = await contractWithProvider.queryFilter(
+            "DiamondTokenized",
+            Number(result?.blockNumber) - 1,
+            Number(result?.blockNumber) + 1
+          );
+          console.log("eventDetails", eventDetails);
+
+          eventDetails.forEach((event) => {
+            const decodedData = extractEventData(
+              tokenizationABI.find((e) => e.name === "DiamondTokenized"),
+              event
+            );
+            console.log("Decoded Event Data:", decodedData);
+          });
 
           // Update the request status in the database
           const { error } = await supabase
