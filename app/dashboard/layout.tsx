@@ -142,6 +142,14 @@ export default async function DashboardLayout({
                 </Link>
               </>
             )}
+            {userRole === "agent" && (
+              <Link
+                href="/dashboard/agent/subscription-requests"
+                className="block py-2 px-4 text-gray-700 hover:bg-gray-200"
+              >
+                Subscription Requests
+              </Link>
+            )}
             {(!kycKybStatus ||
               (kycKybStatus?.status !== "approved" &&
                 kycKybStatus?.status !== "submitted")) &&
